@@ -11,12 +11,11 @@
 //色值
 #define RGBA(r,g,b,a) [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
 #define RGB(r,g,b) RGBA(r,g,b,1.0f)
+#define Screew self.view.frame.size.width
 
-UIView *alphaView;
+UIView *bgview;
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
-
-@property(nonatomic,strong)UIView *bgview;
 
 @end
 
@@ -33,17 +32,16 @@ UIView *alphaView;
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupTableview];
-    CGRect frame = self.navigationController.navigationBar.frame;
-    alphaView = [[UIView alloc] initWithFrame:CGRectMake(0, -[UIApplication sharedApplication].statusBarFrame.size.height, frame.size.width, frame.size.height+[UIApplication sharedApplication].statusBarFrame.size.height)];
-    alphaView.backgroundColor = RGBA(53, 53, 53, 0);
-    alphaView.userInteractionEnabled = NO;
-    [self.navigationController.navigationBar insertSubview: alphaView atIndex:0];
+    bgview = [[UIView alloc] initWithFrame:CGRectMake(0, -[UIApplication sharedApplication].statusBarFrame.size.height, Screew, self.navigationController.navigationBar.frame.size.height+[UIApplication sharedApplication].statusBarFrame.size.height)];
+    bgview.backgroundColor = RGBA(53, 53, 53, 0);
+    bgview.userInteractionEnabled = NO;
+    [self.navigationController.navigationBar insertSubview: bgview atIndex:0];
     
 
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    alphaView.backgroundColor = RGBA(53, 53, 53, scrollView.contentOffset.y/([UIApplication sharedApplication].statusBarFrame.size.height+self.navigationController.navigationBar.frame.size.height));
+    bgview.backgroundColor = RGBA(53, 53, 53, scrollView.contentOffset.y/([UIApplication sharedApplication].statusBarFrame.size.height+self.navigationController.navigationBar.frame.size.height));
 }
 
 -(void)setupTableview{
