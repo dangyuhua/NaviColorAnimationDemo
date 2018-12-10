@@ -8,6 +8,12 @@
 
 #import "ViewController.h"
 
+//色值
+#define RGBA(r,g,b,a) [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
+#define RGB(r,g,b) RGBA(r,g,b,1.0f)
+
+UIView *alphaView;
+
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property(nonatomic,strong)UIView *bgview;
@@ -18,26 +24,28 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES];
+    [self.navigationController.navigationBar setTranslucent:true];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setShadowImage:[UIImage new]];
+    [self.navigationController.navigationBar setBackgroundColor:[UIColor clearColor]];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupTableview];
-    [self setupNaviView];
-}
-//一定要放在其他UI后面，不然被遮盖了
--(void)setupNaviView{
-    self.bgview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].statusBarFrame.size.height+44)];
-    [self.view addSubview:self.bgview];
-    self.bgview.backgroundColor = [UIColor grayColor];
-    self.bgview.alpha = 1;
+    CGRect frame = self.navigationController.navigationBar.frame;
+    alphaView = [[UIView alloc] initWithFrame:CGRectMake(0, -[UIApplication sharedApplication].statusBarFrame.size.height, frame.size.width, frame.size.height+[UIApplication sharedApplication].statusBarFrame.size.height)];
+    alphaView.backgroundColor = RGBA(53, 53, 53, 0);
+    alphaView.userInteractionEnabled = NO;
+    [self.navigationController.navigationBar insertSubview: alphaView atIndex:0];
+    
+
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    self.bgview.alpha = scrollView.contentOffset.y/64;
+    alphaView.backgroundColor = RGBA(53, 53, 53, scrollView.contentOffset.y/([UIApplication sharedApplication].statusBarFrame.size.height+self.navigationController.navigationBar.frame.size.height));
 }
-//根据自己的需要灵活的调整frame
+
 -(void)setupTableview{
     UITableView *tableview = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStylePlain];
     [self.view addSubview:tableview];
