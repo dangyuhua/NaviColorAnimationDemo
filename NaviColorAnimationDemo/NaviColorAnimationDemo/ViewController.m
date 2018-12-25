@@ -29,6 +29,13 @@ UIView *bgview;
     [self.navigationController.navigationBar setBackgroundColor:[UIColor clearColor]];
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [self.navigationController.navigationBar setTranslucent:NO];
+    [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setShadowImage:nil];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupTableview];
